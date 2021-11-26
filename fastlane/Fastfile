@@ -26,8 +26,51 @@ platform :ios do
     target_project = options[:project]
     target_version = options[:version]
     target_desc    = options[:desc]
-    target_source  = options[:source]
+    target_sources  = options[:sources]
     spec_path      = "#{target_project}.podspec"
+
+
+    pod_lib_lint_use_bundle_exec  = options[:pod_lib_lint_use_bundle_exec]
+    if pod_lib_lint_use_bundle_exec.nil? || pod_lib_lint_use_bundle_exec.empty?
+       pod_lib_lint_use_bundle_exec = false
+    end
+    pod_lib_lint_allow_warnings  = options[:pod_lib_lint_allow_warnings]
+    if pod_lib_lint_allow_warnings.nil? || pod_lib_lint_allow_warnings.empty?
+       pod_lib_lint_allow_warnings = true
+    end
+    pod_lib_lint_verbose  = options[:pod_lib_lint_verbose]
+    if pod_lib_lint_verbose.nil? || pod_lib_lint_verbose.empty?
+       pod_lib_lint_verbose = true
+    end
+    pod_lib_lint_no_clean  = options[:pod_lib_lint_no_clean]
+    if pod_lib_lint_no_clean.nil? || pod_lib_lint_no_clean.empty?
+       pod_lib_lint_no_clean = true
+    end
+    pod_lib_lint_skip_import_validation  = options[:pod_lib_lint_skip_import_validation]
+    if pod_lib_lint_skip_import_validation.nil? || pod_lib_lint_skip_import_validation.empty?
+       pod_lib_lint_skip_import_validation = true
+    end
+
+
+    pod_push_use_bundle_exec  = options[:pod_push_use_bundle_exec]
+    if pod_push_use_bundle_exec.nil? || pod_push_use_bundle_exec.empty?
+       pod_push_use_bundle_exec = false
+    end
+    pod_push_allow_warnings  = options[:pod_push_allow_warnings]
+    if pod_push_allow_warnings.nil? || pod_push_allow_warnings.empty?
+       pod_push_allow_warnings = true
+    end
+    pod_push_verbose  = options[:pod_push_verbose]
+    if pod_push_verbose.nil? || pod_push_verbose.empty?
+       pod_push_verbose = true
+    end
+    pod_push_skip_import_validation  = options[:pod_push_skip_import_validation]
+    if pod_push_skip_import_validation.nil? || pod_push_skip_import_validation.empty?
+       pod_push_skip_import_validation = true
+    end
+
+
+
 
     # git pull
     git_pull
@@ -35,17 +78,24 @@ platform :ios do
     # 确认是 master 分支
 #     ensure_git_branch(branch: 'dev')
 
-    source = ['https://github.com/CocoaPods/Specs']
+    sources = ['https://github.com/CocoaPods/Specs']
 
-    if target_source.nil? || target_source.empty?
+    if target_sources.nil? || target_sources.empty?
     else
-        source.concat(target_source)
+        sources.concat(target_sources)
     end
 
 
     # 先验证 spec 文件
     pod_lib_lint(
-    use_bundle_exec: false, allow_warnings: true, verbose: true, no_clean: false, skip_import_validation: true, sources:source)
+        use_bundle_exec: pod_lib_lint_use_bundle_exec,
+        allow_warnings: pod_lib_lint_allow_warnings,
+        verbose: pod_lib_lint_verbose,
+        no_clean: pod_lib_lint_no_clean,
+        skip_import_validation: pod_lib_lint_skip_import_validation,
+        sources:sources
+    )
+
     UI.message("pod lib #{target_project} version #{target_version} Successfully! 🎉 ")
 
     # 修改 spec 为即将发布的版本
@@ -82,12 +132,17 @@ platform :ios do
     push_git_tags
 
     # pod repo push 'target_repo' 'spec_path'
-    pod_push(path: spec_path, use_bundle_exec: false, repo: target_repo, allow_warnings: true, verbose:true, skip_import_validation: true)
+    pod_push(
+        path: spec_path,
+        use_bundle_exec: pod_push_use_bundle_exec,
+        repo: target_repo,
+        allow_warnings: pod_push_allow_warnings,
+        verbose:pod_push_verbose,
+        skip_import_validation: pod_push_skip_import_validation
+    )
     UI.message("Release lib #{target_project} version #{target_version} to repo #{target_repo} Successfully! 🎉 ")
   end
 end
-
-
 
 
 
