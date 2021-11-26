@@ -19,7 +19,7 @@ default_platform(:ios)
 platform :ios do
   desc "Description of what the lane does"
 
-  lane :pod do |options|
+  lane :release_pod do |options|
       target_repo    = options[:repo]
       target_project = options[:project]
       target_version = options[:version]
