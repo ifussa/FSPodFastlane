@@ -16,10 +16,6 @@
 
 default_platform(:ios)
 
-#上传到蒲公英
-def hello
-    UI.message("hello! 🎉 ")
-end
 
 # 编译打包
 platform :ios do
@@ -39,11 +35,11 @@ platform :ios do
     # 确认是 master 分支
 #     ensure_git_branch(branch: 'dev')
 
-    source = ["https://github.com/CocoaPods/Specs"]
+    source = ['https://github.com/CocoaPods/Specs']
 
     if target_source.nil? || target_source.empty?
     else
-        source.concat(target_source)
+        source = source & target_source
     end
 
 
