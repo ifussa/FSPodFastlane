@@ -39,7 +39,7 @@ platform :ios do
 
     if target_source.nil? || target_source.empty?
     else
-        source = source & target_source
+        source.concat(target_source)
     end
 
 
