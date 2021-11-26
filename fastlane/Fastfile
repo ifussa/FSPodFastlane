@@ -26,50 +26,19 @@ platform :ios do
     target_project = options[:project]
     target_version = options[:version]
     target_desc    = options[:desc]
-    target_sources  = options[:sources]
+    target_sources = options[:sources]
     spec_path      = "#{target_project}.podspec"
 
+    pod_lib_lint_use_bundle_exec        = options[:pod_lib_lint_use_bundle_exec].nil?           ?   false : options[:pod_lib_lint_use_bundle_exec]
+    pod_lib_lint_allow_warnings         = options[:pod_lib_lint_allow_warnings].nil?            ?   true  : options[:pod_lib_lint_allow_warnings]
+    pod_lib_lint_verbose                = options[:pod_lib_lint_verbose].nil?                   ?   true  : options[:pod_lib_lint_verbose]
+    pod_lib_lint_no_clean               = options[:pod_lib_lint_no_clean].nil?                  ?   true  : options[:pod_lib_lint_no_clean]
+    pod_lib_lint_skip_import_validation = options[:pod_lib_lint_skip_import_validation].nil?    ?   true  : options[:pod_lib_lint_skip_import_validation]
 
-    pod_lib_lint_use_bundle_exec  = options[:pod_lib_lint_use_bundle_exec]
-    if pod_lib_lint_use_bundle_exec.nil?
-       pod_lib_lint_use_bundle_exec = false
-    end
-    pod_lib_lint_allow_warnings  = options[:pod_lib_lint_allow_warnings]
-    if pod_lib_lint_allow_warnings.nil?
-       pod_lib_lint_allow_warnings = true
-    end
-    pod_lib_lint_verbose = options[:pod_lib_lint_verbose]
-    if pod_lib_lint_verbose.nil?
-       pod_lib_lint_verbose = true
-    end
-    pod_lib_lint_no_clean  = options[:pod_lib_lint_no_clean]
-    if pod_lib_lint_no_clean.nil?
-       pod_lib_lint_no_clean = true
-    end
-    pod_lib_lint_skip_import_validation  = options[:pod_lib_lint_skip_import_validation]
-    if pod_lib_lint_skip_import_validation.nil?
-       pod_lib_lint_skip_import_validation = true
-    end
-
-
-    pod_push_use_bundle_exec  = options[:pod_push_use_bundle_exec]
-    if pod_push_use_bundle_exec.nil?
-       pod_push_use_bundle_exec = false
-    end
-    pod_push_allow_warnings  = options[:pod_push_allow_warnings]
-    if pod_push_allow_warnings.nil?
-       pod_push_allow_warnings = true
-    end
-    pod_push_verbose  = options[:pod_push_verbose]
-    if pod_push_verbose.nil?
-       pod_push_verbose = true
-    end
-    pod_push_skip_import_validation  = options[:pod_push_skip_import_validation]
-    if pod_push_skip_import_validation.nil?
-       pod_push_skip_import_validation = true
-    end
-
-
+    pod_push_use_bundle_exec            = options[:pod_push_use_bundle_exec].nil?               ?   false : options[:pod_push_use_bundle_exec]
+    pod_push_allow_warnings             = options[:pod_push_allow_warnings].nil?                ?   true  : options[:pod_push_allow_warnings]
+    pod_push_verbose                    = options[:pod_push_verbose].nil?                       ?   true  : options[:pod_push_verbose]
+    pod_push_skip_import_validation     = options[:pod_push_skip_import_validation].nil?        ?   true  : options[:pod_push_skip_import_validation]
 
 
     # git pull
