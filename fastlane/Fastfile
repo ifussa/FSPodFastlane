@@ -31,41 +31,41 @@ platform :ios do
 
 
     pod_lib_lint_use_bundle_exec  = options[:pod_lib_lint_use_bundle_exec]
-    if pod_lib_lint_use_bundle_exec.nil? || pod_lib_lint_use_bundle_exec.empty?
+    if pod_lib_lint_use_bundle_exec.nil?
        pod_lib_lint_use_bundle_exec = false
     end
     pod_lib_lint_allow_warnings  = options[:pod_lib_lint_allow_warnings]
-    if pod_lib_lint_allow_warnings.nil? || pod_lib_lint_allow_warnings.empty?
+    if pod_lib_lint_allow_warnings.nil?
        pod_lib_lint_allow_warnings = true
     end
-    pod_lib_lint_verbose  = options[:pod_lib_lint_verbose]
-    if pod_lib_lint_verbose.nil? || pod_lib_lint_verbose.empty?
+    pod_lib_lint_verbose = options[:pod_lib_lint_verbose]
+    if pod_lib_lint_verbose.nil?
        pod_lib_lint_verbose = true
     end
     pod_lib_lint_no_clean  = options[:pod_lib_lint_no_clean]
-    if pod_lib_lint_no_clean.nil? || pod_lib_lint_no_clean.empty?
+    if pod_lib_lint_no_clean.nil?
        pod_lib_lint_no_clean = true
     end
     pod_lib_lint_skip_import_validation  = options[:pod_lib_lint_skip_import_validation]
-    if pod_lib_lint_skip_import_validation.nil? || pod_lib_lint_skip_import_validation.empty?
+    if pod_lib_lint_skip_import_validation.nil?
        pod_lib_lint_skip_import_validation = true
     end
 
 
     pod_push_use_bundle_exec  = options[:pod_push_use_bundle_exec]
-    if pod_push_use_bundle_exec.nil? || pod_push_use_bundle_exec.empty?
+    if pod_push_use_bundle_exec.nil?
        pod_push_use_bundle_exec = false
     end
     pod_push_allow_warnings  = options[:pod_push_allow_warnings]
-    if pod_push_allow_warnings.nil? || pod_push_allow_warnings.empty?
+    if pod_push_allow_warnings.nil?
        pod_push_allow_warnings = true
     end
     pod_push_verbose  = options[:pod_push_verbose]
-    if pod_push_verbose.nil? || pod_push_verbose.empty?
+    if pod_push_verbose.nil?
        pod_push_verbose = true
     end
     pod_push_skip_import_validation  = options[:pod_push_skip_import_validation]
-    if pod_push_skip_import_validation.nil? || pod_push_skip_import_validation.empty?
+    if pod_push_skip_import_validation.nil?
        pod_push_skip_import_validation = true
     end
 
