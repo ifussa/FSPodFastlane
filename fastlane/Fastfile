@@ -14,8 +14,6 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-default_platform(:ios)
-
 
 # 编译打包
 platform :ios do
