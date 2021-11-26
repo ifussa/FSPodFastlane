@@ -16,8 +16,15 @@
 
 default_platform(:ios)
 
+#上传到蒲公英
+def hello
+    UI.message("hello! 🎉 ")
+end
+
 # 编译打包
-def release_pod(options)
+platform :ios do
+  desc 'Release new pod version'
+  lane :release_pod do |options|
 
     target_repo    = options[:repo]
     target_project = options[:project]
@@ -81,6 +88,7 @@ def release_pod(options)
     # pod repo push 'target_repo' 'spec_path'
     pod_push(path: spec_path, use_bundle_exec: false, repo: target_repo, allow_warnings: true, verbose:true, skip_import_validation: true)
     UI.message("Release lib #{target_project} version #{target_version} to repo #{target_repo} Successfully! 🎉 ")
+  end
 end
 
 
