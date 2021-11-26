@@ -17,53 +17,126 @@
 default_platform(:ios)
 
 platform :ios do
-  desc 'Release new pod version'
-  lane :release_pod do |options|
-    target_repo    = options[:repo]
-    target_project = options[:project]
-    target_version = options[:version]
-    target_desc    = options[:desc]
-    spec_path      = "#{target_project}.podspec"
+  desc "Description of what the lane does"
 
-    if target_project.nil? || target_project.empty? || target_version.nil? || target_version.empty?
-      UI.message("❌ Project name and version number are required parameters")
-      exit
-    end
+  lane :pod do |options|
+      target_repo    = options[:repo]
+      target_project = options[:project]
+      target_version = options[:version]
+      target_desc    = options[:desc]
+      target_source  = options[:source]
+      spec_path      = "#{target_project}.podspec"
 
-    UI.message("👉 Start release lib #{target_project} new version #{target_version}")
-
+    # git pull
     git_pull
-    ensure_git_branch
-    version_bump_podspec(path: spec_path, version_number: target_version)
-    git_add(path: '.')
-    begin
-      if target_desc.nil? || target_desc.empty?
-        git_commit(path: '.', message: "release #{target_version}")
-      else
-        git_commit(path: '.', message: target_desc)
-      end
-    rescue
-      error_message = "#{$!}"
-      UI.message("⚠️ commit error:#{error_message}")
-      unless error_message.include?("nothing to commit, working directory clean")
-        exit
-      end
-      UI.message("The local code has committed, skip the commit step!")
+
+    # 确认是 master 分支
+#     ensure_git_branch(branch: 'dev')
+
+    source = ["https://github.com/CocoaPods/Specs"]
+
+    if target_source.nil? || target_source.empty?
+    else
+        source.concat(target_source)
     end
+
+
+    # 先验证 spec 文件
+    pod_lib_lint(
+    use_bundle_exec: false, allow_warnings: true, verbose: true, no_clean: false, skip_import_validation: true, sources:source)
+    UI.message("pod lib #{target_project} version #{target_version} Successfully! 🎉 ")
+
+    # 修改 spec 为即将发布的版本
+    if target_version.nil?
+        target_version = version_bump_podspec(path: spec_path, bump_type: "patch")
+    else
+        version_bump_podspec(path: spec_path, version_number: target_version)
+    end
+
+    UI.message("👉 Start release lib #{target_project} version #{target_version}")
+
+    # 提交代码到远程仓库
+    git_add(path: '.')
+
+    if target_desc.nil? || target_desc.empty?
+        git_commit(path: '.', message: "docs: release #{target_version}")
+    else
+        git_commit(path: '.', message: target_desc)
+    end
+
     push_to_git_remote
+
+    # 检查对于 tag 是否已经存在
     if git_tag_exists(tag: target_version)
+        # 删除对应 tag
         UI.message("Tag #{target_version} already exists, then, delete it! 💥")
         remove_git_tag(tag: target_version)
     end
+
+    # 添加 tag
     add_git_tag(tag: target_version)
+
+    # 提交 tag
     push_git_tags
-    pod_lib_lint(use_bundle_exec: false, allow_warnings: true, verbose: true, no_clean: true)
-    if target_repo
-      pod_push(path: spec_path, repo: target_repo, use_bundle_exec: false, allow_warnings: true, verbose:true)
-      UI.message("Release lib #{target_project} new version #{target_version} to repo #{target_repo} Successfully! 🎉 ")
-    else
-      pod_push(path: spec_path, use_bundle_exec: false, allow_warnings: true, verbose: false)
-      UI.message("Release lib #{target_project} new version #{target_version} to CocoaPods/Specs Successfully! 🎉 ")
-    end
+
+    # pod repo push 'target_repo' 'spec_path'
+    pod_push(path: spec_path, use_bundle_exec: false, repo: target_repo, allow_warnings: true, verbose:true, skip_import_validation: true)
+    UI.message("Release lib #{target_project} version #{target_version} to repo #{target_repo} Successfully! 🎉 ")
   end
+
 end
+
+
+
+
+# platform :ios do
+#   desc 'Release new pod version'
+#   lane :release_pod do |options|
+#     target_repo    = options[:repo]
+#     target_project = options[:project]
+#     target_version = options[:version]
+#     target_desc    = options[:desc]
+#     spec_path      = "#{target_project}.podspec"
+#
+#     if target_project.nil? || target_project.empty? || target_version.nil? || target_version.empty?
+#       UI.message("❌ Project name and version number are required parameters")
+#       exit
+#     end
+#
+#     UI.message("👉 Start release lib #{target_project} new version #{target_version}")
+#
+#     git_pull
+#     ensure_git_branch
+#     version_bump_podspec(path: spec_path, version_number: target_version)
+#     git_add(path: '.')
+#     begin
+#       if target_desc.nil? || target_desc.empty?
+#         git_commit(path: '.', message: "release #{target_version}")
+#       else
+#         git_commit(path: '.', message: target_desc)
+#       end
+#     rescue
+#       error_message = "#{$!}"
+#       UI.message("⚠️ commit error:#{error_message}")
+#       unless error_message.include?("nothing to commit, working directory clean")
+#         exit
+#       end
+#       UI.message("The local code has committed, skip the commit step!")
+#     end
+#     push_to_git_remote
+#     if git_tag_exists(tag: target_version)
+#         UI.message("Tag #{target_version} already exists, then, delete it! 💥")
+#         remove_git_tag(tag: target_version)
+#     end
+#     add_git_tag(tag: target_version)
+#     push_git_tags
+#     pod_lib_lint(use_bundle_exec: false, allow_warnings: true, verbose: true, no_clean: true)
+#     if target_repo
+#       pod_push(path: spec_path, repo: target_repo, use_bundle_exec: false, allow_warnings: true, verbose:true)
+#       UI.message("Release lib #{target_project} new version #{target_version} to repo #{target_repo} Successfully! 🎉 ")
+#     else
+#       pod_push(path: spec_path, use_bundle_exec: false, allow_warnings: true, verbose: false)
+#       UI.message("Release lib #{target_project} new version #{target_version} to CocoaPods/Specs Successfully! 🎉 ")
+#     end
+#   end
+# end
